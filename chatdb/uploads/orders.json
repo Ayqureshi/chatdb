@@ -1,0 +1,151 @@
+[
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439101" },
+    "userId": { "$oid": "605c72d4bcf86cd799439011" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439022" }, "quantity": 1, "price": 99.99 },
+      { "productId": { "$oid": "605c72d4bcf86cd799439023" }, "quantity": 1, "price": 799.99 }
+    ],
+    "totalAmount": 899.98,
+    "orderDate": { "$date": "2023-10-05T15:00:00Z" },
+    "status": "shipped",
+    "shippingAddress": {
+      "street": "123 Main St",
+      "city": "New York",
+      "zipCode": "10001",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439102" },
+    "userId": { "$oid": "605c72d4bcf86cd799439012" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439022" }, "quantity": 2, "price": 99.99 }
+    ],
+    "totalAmount": 199.98,
+    "orderDate": { "$date": "2023-10-06T10:00:00Z" },
+    "status": "pending",
+    "shippingAddress": {
+      "street": "456 Elm St",
+      "city": "Los Angeles",
+      "zipCode": "90001",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439103" },
+    "userId": { "$oid": "605c72d4bcf86cd799439013" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439024" }, "quantity": 1, "price": 199.99 }
+    ],
+    "totalAmount": 199.99,
+    "orderDate": { "$date": "2023-10-05T08:00:00Z" },
+    "status": "delivered",
+    "shippingAddress": {
+      "street": "789 Oak St",
+      "city": "Chicago",
+      "zipCode": "60601",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439104" },
+    "userId": { "$oid": "605c72d4bcf86cd799439014" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439025" }, "quantity": 1, "price": 1299.99 },
+      { "productId": { "$oid": "605c72d4bcf86cd799439026" }, "quantity": 1, "price": 499.99 }
+    ],
+    "totalAmount": 1799.98,
+    "orderDate": { "$date": "2023-10-07T11:00:00Z" },
+    "status": "processing",
+    "shippingAddress": {
+      "street": "321 Pine St",
+      "city": "Seattle",
+      "zipCode": "98101",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439105" },
+    "userId": { "$oid": "605c72d4bcf86cd799439015" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439027" }, "quantity": 2, "price": 49.99 },
+      { "productId": { "$oid": "605c72d4bcf86cd799439028" }, "quantity": 1, "price": 999.99 }
+    ],
+    "totalAmount": 1099.97,
+    "orderDate": { "$date": "2023-10-08T14:00:00Z" },
+    "status": "shipped",
+    "shippingAddress": {
+      "street": "654 Birch St",
+      "city": "Houston",
+      "zipCode": "77001",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439106" },
+    "userId": { "$oid": "605c72d4bcf86cd799439016" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439029" }, "quantity": 1, "price": 699.99 }
+    ],
+    "totalAmount": 699.99,
+    "orderDate": { "$date": "2023-10-06T16:00:00Z" },
+    "status": "delivered",
+    "shippingAddress": {
+      "street": "321 Maple St",
+      "city": "San Francisco",
+      "zipCode": "94101",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439107" },
+    "userId": { "$oid": "605c72d4bcf86cd799439017" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439030" }, "quantity": 1, "price": 29.99 },
+      { "productId": { "$oid": "605c72d4bcf86cd799439031" }, "quantity": 1, "price": 499.99 }
+    ],
+    "totalAmount": 529.98,
+    "orderDate": { "$date": "2023-10-09T09:30:00Z" },
+    "status": "pending",
+    "shippingAddress": {
+      "street": "123 Cedar St",
+      "city": "Atlanta",
+      "zipCode": "30301",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439108" },
+    "userId": { "$oid": "605c72d4bcf86cd799439018" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439028" }, "quantity": 1, "price": 999.99 },
+      { "productId": { "$oid": "605c72d4bcf86cd799439029" }, "quantity": 1, "price": 699.99 }
+    ],
+    "totalAmount": 1699.98,
+    "orderDate": { "$date": "2023-10-10T12:45:00Z" },
+    "status": "delivered",
+    "shippingAddress": {
+      "street": "789 Oak St",
+      "city": "Chicago",
+      "zipCode": "60601",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439109" },
+    "userId": { "$oid": "605c72d4bcf86cd799439019" },
+    "items": [
+      { "productId": { "$oid": "605c72d4bcf86cd799439024" }, "quantity": 1, "price": 199.99 }
+    ],
+    "totalAmount": 199.99,
+    "orderDate": { "$date": "2023-10-11T10:30:00Z" },
+    "status": "pending",
+    "shippingAddress": {
+      "street": "456 Maple St",
+      "city": "Denver",
+      "zipCode": "80201",
+      "country": "USA"
+    }
+  }
+]

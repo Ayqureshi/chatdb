@@ -1,0 +1,136 @@
+[
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439022" },
+    "name": "Wireless Headphones",
+    "description": "Bluetooth wireless headphones with noise cancellation.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 99.99,
+    "stock": 100,
+    "brand": "BrandX",
+    "createdAt": { "$date": "2023-10-01T10:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439011" }, "rating": 4 },
+      { "userId": { "$oid": "605c72d4bcf86cd799439012" }, "rating": 5 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439023" },
+    "name": "Smartphone",
+    "description": "Latest model with advanced features.",
+    "category": { "$oid": "605c72d4bcf86cd799439034" },
+    "price": 799.99,
+    "stock": 50,
+    "brand": "BrandY",
+    "createdAt": { "$date": "2023-10-03T14:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439012" }, "rating": 5 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439024" },
+    "name": "Smartwatch",
+    "description": "Fitness and activity tracker with heart rate monitoring.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 199.99,
+    "stock": 150,
+    "brand": "BrandZ",
+    "createdAt": { "$date": "2023-10-04T11:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439013" }, "rating": 4 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439025" },
+    "name": "Laptop",
+    "description": "High-performance laptop for gaming and work.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 1299.99,
+    "stock": 30,
+    "brand": "BrandA",
+    "createdAt": { "$date": "2023-09-25T09:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439014" }, "rating": 5 },
+      { "userId": { "$oid": "605c72d4bcf86cd799439015" }, "rating": 4 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439026" },
+    "name": "Tablet",
+    "description": "10-inch tablet with high-resolution display and long battery life.",
+    "category": { "$oid": "605c72d4bcf86cd799439034" },
+    "price": 499.99,
+    "stock": 80,
+    "brand": "BrandB",
+    "createdAt": { "$date": "2023-09-30T15:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439016" }, "rating": 5 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439027" },
+    "name": "Bluetooth Speaker",
+    "description": "Portable Bluetooth speaker with 360-degree sound.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 49.99,
+    "stock": 200,
+    "brand": "BrandC",
+    "createdAt": { "$date": "2023-09-20T12:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439011" }, "rating": 3 },
+      { "userId": { "$oid": "605c72d4bcf86cd799439017" }, "rating": 4 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439028" },
+    "name": "4K TV",
+    "description": "65-inch 4K Ultra HD TV with HDR support.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 999.99,
+    "stock": 20,
+    "brand": "BrandD",
+    "createdAt": { "$date": "2023-09-15T18:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439018" }, "rating": 5 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439029" },
+    "name": "Digital Camera",
+    "description": "24.2MP digital camera with 4K video recording capabilities.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 699.99,
+    "stock": 60,
+    "brand": "BrandE",
+    "createdAt": { "$date": "2023-09-18T13:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439019" }, "rating": 4 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439030" },
+    "name": "Wireless Charger",
+    "description": "Fast wireless charger for smartphones and accessories.",
+    "category": { "$oid": "605c72d4bcf86cd799439034" },
+    "price": 29.99,
+    "stock": 500,
+    "brand": "BrandF",
+    "createdAt": { "$date": "2023-09-12T10:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439020" }, "rating": 4 }
+    ]
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439031" },
+    "name": "Gaming Console",
+    "description": "Next-gen gaming console with 1TB storage.",
+    "category": { "$oid": "605c72d4bcf86cd799439033" },
+    "price": 499.99,
+    "stock": 40,
+    "brand": "BrandG",
+    "createdAt": { "$date": "2023-08-15T11:00:00Z" },
+    "ratings": [
+      { "userId": { "$oid": "605c72d4bcf86cd799439011" }, "rating": 5 },
+      { "userId": { "$oid": "605c72d4bcf86cd799439013" }, "rating": 4 }
+    ]
+  }
+]
