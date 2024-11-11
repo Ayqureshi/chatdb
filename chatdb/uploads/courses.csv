@@ -1,7 +1,0 @@
-CourseID,CourseName,InstructorID,InstructorName,CreditHours
-101,Data Structures,2,Dr. Brown,3
-102,Calculus,3,Dr. Smith,4
-103,Database Systems,2,Dr. Brown,3
-104,Linear Algebra,3,Dr. Smith,3
-105,Introduction to Business,4,Dr. White,3
-101,Data Structures,3,Dr. Smith,3
