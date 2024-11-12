@@ -5,6 +5,8 @@ import pandas as pd
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+import pymysql
+import pymongo
 import json
 import re
 from flask_cors import CORS
@@ -181,14 +183,79 @@ def process_json_file_and_load_to_mongo(filepath, collection_name):
     print(f"MongoDB data insertion complete into {collection_name} collection.")
 
 # Route to explore MySQL databases and show tables
-@app.route('/api/explore', methods=['GET'])
+@app.route('/api/explore', methods=['POST'])
 def explore():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SHOW TABLES;")
-    tables = cursor.fetchall()
-    conn.close()
-    return jsonify({'tables': [table[0] for table in tables]}), 200
+    db_type = request.json.get('db_type', '').lower()
+
+    if db_type == 'mysql':
+        try:
+            connection = get_db_connection()  # Use your existing MySQL connection function
+            cursor = connection.cursor()
+
+            # Fetch tables
+            cursor.execute("SHOW TABLES")
+            tables = cursor.fetchall()
+
+            table_details = {}
+            for table in tables:
+                table_name = table[0]
+                cursor.execute(f"DESCRIBE {table_name}")
+                attributes = cursor.fetchall()
+
+                # Fetch sample data
+                cursor.execute(f"SELECT * FROM {table_name} LIMIT 5")
+                sample_data = cursor.fetchall()
+                columns = [desc[0] for desc in cursor.description]
+                
+                # Format the sample data
+                sample_data_formatted = []
+                for row in sample_data:
+                    formatted_row = {}
+                    for col, val in zip(columns, row):
+                        # Convert timedelta to string
+                        if isinstance(val, timedelta):
+                            formatted_row[col] = str(val)
+                        else:
+                            formatted_row[col] = val
+                    sample_data_formatted.append(formatted_row)
+
+                table_details[table_name] = {
+                    'attributes': attributes,
+                    'sample_data': sample_data_formatted
+                }
+
+            cursor.close()
+            connection.close()
+
+            return jsonify({"db_type": "mysql", "tables": table_details})
+
+        except Exception as e:
+            return jsonify({"error": str(e)})
+
+
+    elif db_type == 'mongodb':
+        try:
+            db = get_mongo_connection()
+            collection_names = db.list_collection_names()
+            collection_details = {}
+
+            for collection_name in collection_names:
+                collection = db[collection_name]
+                attributes = list(collection.find_one().keys()) if collection.find_one() else []
+                sample_data = list(collection.find().limit(5))
+
+                collection_details[collection_name] = {
+                    'attributes': attributes,
+                    'sample_data': sample_data
+                }
+
+            return jsonify({"db_type": "mongodb", "collections": collection_details})
+
+        except Exception as e:
+            return jsonify({"error": str(e)})
+
+    else:
+        return jsonify({"error": "Invalid database type specified."})
 
 # Route to fetch sample queries
 @app.route('/api/sample_queries', methods=['GET'])
@@ -225,6 +292,7 @@ def execute_query():
         return jsonify({'error': str(e)}), 400
     finally:
         conn.close()
+        
 # File to database mapping
 input_to_query_mapping = {
     'sales': {

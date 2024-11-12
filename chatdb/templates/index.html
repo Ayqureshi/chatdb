@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,159 +34,188 @@
             <button onclick="executeQuery()">Execute</button>
             <div id="query-result"></div>
         </div>
-    </div>
 
-    <script>
-        // Chat function: send the user message to Flask backend
-        function sendMessage() {
-            const userInput = document.getElementById('user-input');
-    const message = userInput.value.trim();
+        <!-- Explore Databases Section -->
+        <div class="explore-section">
+            <h2>Explore Databases</h2>
+            <label for="db-type">Select Database Type:</label>
+            <select id="db-type">
+                <option value="mysql">MySQL</option>
+                <option value="mongodb">MongoDB</option>
+            </select>
+            <button onclick="exploreDatabase()">Explore</button>
+            <div id="explore-result"></div>
+        </div>
 
-    if (message) {
-        fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: message })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP status ${response.status}`);
-            }
-            return response.json();  // Ensure response is parsed as JSON
-        })
-        .then(data => {
-            console.log("Data received from server:", data);  // Log the data for debugging
-            if (data.response) {
-                appendMessage(data.response, 'server');  // Append the response
-            } else if (data.error) {
-                appendMessage(`Server error: ${data.error}`, 'server');
-            } else {
-                throw new Error('Unexpected response structure');
-            }
-        })
-        .catch(error => {
-            console.error('Error sending message:', error);
-            appendMessage('Failed to get response from server: ' + error.message, 'server');
-        });
+        <script>
+            // Chat function: send the user message to Flask backend
+            function sendMessage() {
+                const userInput = document.getElementById('user-input');
+                const message = userInput.value.trim();
 
-        userInput.value = '';  // Clear input after sending
-    }
-        }
-
-// Helper function to append messages to the chat display
-function appendMessage(text, sender) {
-    const messagesDiv = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', sender);
-    messageDiv.textContent = text;
-    messagesDiv.appendChild(messageDiv);
-}
-
-        // File Upload function: upload a file to Flask backend
-        async function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const resultDiv = document.getElementById('upload-result');
-            
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const formData = new FormData();
-                formData.append('file', file);
-
-                try {
-                    const response = await fetch('/api/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        resultDiv.innerHTML = `<p>File uploaded successfully: ${data.filename}</p>`;
-                    } else {
-                        resultDiv.innerHTML = `<p>${data.message}</p>`;
-                    }
-                } catch (error) {
-                    resultDiv.innerHTML = `<p>Error uploading file. Please try again.</p>`;
-                    console.error('Error uploading file:', error);
-                }
-            } else {
-                resultDiv.innerHTML = `<p>Please select a file to upload.</p>`;
-            }
-        }
-
-        // Function to execute the SQL query
-        async function executeQuery() {
-            const queryInput = document.getElementById('query-input').value.trim();
-            const resultDiv = document.getElementById('query-result');
-
-            if (queryInput) {
-                try {
-                    const response = await fetch('/api/execute_query', {
+                if (message) {
+                    fetch('/api/chat', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ query: queryInput })
+                        body: JSON.stringify({ message: message })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP status ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.response) {
+                            appendMessage(data.response, 'server');
+                        } else if (data.error) {
+                            appendMessage(`Server error: ${data.error}`, 'server');
+                        } else {
+                            throw new Error('Unexpected response structure');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                        appendMessage('Failed to get response from server: ' + error.message, 'server');
+                    });
+
+                    userInput.value = '';
+                }
+            }
+
+            // Helper function to append messages to the chat display
+            function appendMessage(text, sender) {
+                const messagesDiv = document.getElementById('messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                messageDiv.textContent = text;
+                messagesDiv.appendChild(messageDiv);
+            }
+
+            // File Upload function: upload a file to Flask backend
+            async function uploadFile() {
+                const fileInput = document.getElementById('fileInput');
+                const resultDiv = document.getElementById('upload-result');
+                
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    try {
+                        const response = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            resultDiv.innerHTML = `<p>File uploaded successfully: ${data.filename}</p>`;
+                        } else {
+                            resultDiv.innerHTML = `<p>${data.message}</p>`;
+                        }
+                    } catch (error) {
+                        resultDiv.innerHTML = `<p>Error uploading file. Please try again.</p>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = `<p>Please select a file to upload.</p>`;
+                }
+            }
+
+            // Function to execute the SQL query
+            async function executeQuery() {
+                const queryInput = document.getElementById('query-input').value.trim();
+                const resultDiv = document.getElementById('query-result');
+
+                if (queryInput) {
+                    try {
+                        const response = await fetch('/api/execute_query', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ query: queryInput })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            displayTable(data.result);
+                        } else {
+                            resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
+                        }
+                    } catch (error) {
+                        resultDiv.innerHTML = `<p>Error executing query. Please try again.</p>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = `<p>Please enter a SQL query.</p>`;
+                }
+            }
+
+            // Function to explore databases
+            async function exploreDatabase() {
+                const dbType = document.getElementById('db-type').value;
+                const resultDiv = document.getElementById('explore-result');
+
+                try {
+                    const response = await fetch('/api/explore', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ db_type: dbType })
                     });
 
                     const data = await response.json();
 
                     if (response.ok) {
-                        displayTable(data.result);
+                        resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
                     } else {
-                        resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
+                        resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
                     }
                 } catch (error) {
-                    resultDiv.innerHTML = `<p>Error executing query. Please try again.</p>`;
-                    console.error('Error executing query:', error);
+                    resultDiv.innerHTML = `<p>Failed to explore database. Please try again.</p>`;
                 }
-            } else {
-                resultDiv.innerHTML = `<p>Please enter a SQL query.</p>`;
-            }
-        }
-
-        // Function to display query results in a table format
-        function displayTable(data) {
-            const resultDiv = document.getElementById("query-result");
-            resultDiv.innerHTML = '';  // Clear previous results
-
-            if (data.length === 0) {
-                resultDiv.innerHTML = "<p>No results found.</p>";
-                return;
             }
 
-            // Create the table element
-            const table = document.createElement("table");
-            table.style.width = "100%";
-            table.style.borderCollapse = "collapse";
+            // Function to display query results in a table format
+            function displayTable(data) {
+                const resultDiv = document.getElementById("query-result");
+                resultDiv.innerHTML = '';
 
-            // Create table headers from the keys of the first object in the array
-            const headers = Object.keys(data[0]);
-            const headerRow = document.createElement("tr");
-            headers.forEach(header => {
-                const th = document.createElement("th");
-                th.style.border = "1px solid #dddddd";
-                th.style.padding = "8px";
-                th.style.backgroundColor = "#f2f2f2";
-                th.textContent = header; // Set header text based on key name
-                headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
+                if (data.length === 0) {
+                    resultDiv.innerHTML = "<p>No results found.</p>";
+                    return;
+                }
 
-            // Create table rows
-            data.forEach(row => {
-                const rowElement = document.createElement("tr");
-                headers.forEach(header => { // Use headers to get consistent order
-                    const td = document.createElement("td");
-                    td.style.border = "1px solid #dddddd";
-                    td.style.padding = "8px";
-                    td.textContent = row[header]; // Access value by key
-                    rowElement.appendChild(td);
+                const table = document.createElement("table");
+                table.style.width = "100%";
+                table.style.borderCollapse = "collapse";
+
+                const headers = Object.keys(data[0]);
+                const headerRow = document.createElement("tr");
+                headers.forEach(header => {
+                    const th = document.createElement("th");
+                    th.style.border = "1px solid #dddddd";
+                    th.style.padding = "8px";
+                    th.style.backgroundColor = "#f2f2f2";
+                    th.textContent = header;
+                    headerRow.appendChild(th);
                 });
-                table.appendChild(rowElement);
-            });
+                table.appendChild(headerRow);
 
-            resultDiv.appendChild(table);
-        }
+                data.forEach(row => {
+                    const rowElement = document.createElement("tr");
+                    headers.forEach(header => {
+                        const td = document.createElement("td");
+                        td.style.border = "1px solid #dddddd";
+                        td.style.padding = "8px";
+                        td.textContent = row[header];
+                        rowElement.appendChild(td);
+                    });
+                    table.appendChild(rowElement);
+                });
 
-    </script>
+                resultDiv.appendChild(table);
+            }
+        </script>
+    </div>
 </body>
 </html>
