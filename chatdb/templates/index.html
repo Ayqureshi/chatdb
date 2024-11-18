@@ -29,7 +29,7 @@
 
         <!-- SQL Query Execution Section -->
         <div class="query-section">
-            <h2>Execute SQL Query</h2>
+            <h2>Execute SQL/NoSQL Query</h2>
             <textarea id="query-input" placeholder="Enter your SQL query here..."></textarea>
             <button onclick="executeQuery()">Execute</button>
             <div id="query-result"></div>
@@ -49,48 +49,43 @@
 
         <script>
             // Chat function: send the user message to Flask backend
-            function sendMessage() {
+                  
+            async function sendMessage() {
                 const userInput = document.getElementById('user-input');
                 const message = userInput.value.trim();
 
                 if (message) {
-                    fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: message })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP status ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
+                    appendMessage('User', message);
+
+                    try {
+                        const response = await fetch('/api/chat', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: message })
+                        });
+
+                        const data = await response.json();
                         if (data.response) {
-                            appendMessage(data.response, 'server');
-                        } else if (data.error) {
-                            appendMessage(`Server error: ${data.error}`, 'server');
+                            appendMessage('ChatDB', data.response);
                         } else {
-                            throw new Error('Unexpected response structure');
+                            appendMessage('ChatDB', 'Error processing request');
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error sending message:', error);
-                        appendMessage('Failed to get response from server: ' + error.message, 'server');
-                    });
+                    } catch (error) {
+                        appendMessage('ChatDB', 'Failed to connect to the server');
+                    }
 
                     userInput.value = '';
                 }
             }
 
-            // Helper function to append messages to the chat display
-            function appendMessage(text, sender) {
-                const messagesDiv = document.getElementById('messages');
+            function appendMessage(sender, text) {
+                const responseDiv = document.getElementById('messages');
                 const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', sender);
-                messageDiv.textContent = text;
-                messagesDiv.appendChild(messageDiv);
+                messageDiv.className = sender === 'User' ? 'user-message' : 'server-message';
+                messageDiv.textContent = `${sender}: ${text}`;
+                responseDiv.appendChild(messageDiv);
             }
+   
 
             // File Upload function: upload a file to Flask backend
             async function uploadFile() {
@@ -123,32 +118,103 @@
                 }
             }
 
-            // Function to execute the SQL query
+            // Add an event listener to update the placeholder text based on selected database type
+            document.getElementById('db-type').addEventListener('change', function() {
+                const selectedDbType = this.value;
+                const queryInput = document.getElementById('query-input');
+                if (selectedDbType === 'mysql') {
+                    queryInput.placeholder = "Enter your SQL query here...";
+                } else if (selectedDbType === 'mongodb') {
+                    queryInput.placeholder = "Enter your MongoDB query here (in JSON format)...";
+                }
+            });
+
             async function executeQuery() {
                 const queryInput = document.getElementById('query-input').value.trim();
+                const dbType = document.getElementById('db-type').value; // Get the selected database type
                 const resultDiv = document.getElementById('query-result');
 
-                if (queryInput) {
-                    try {
-                        const response = await fetch('/api/execute_query', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ query: queryInput })
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok) {
-                            displayTable(data.result);
-                        } else {
-                            resultDiv.innerHTML = `<p>Error: ${data.message}</p>`;
-                        }
-                    } catch (error) {
-                        resultDiv.innerHTML = `<p>Error executing query. Please try again.</p>`;
-                    }
-                } else {
-                    resultDiv.innerHTML = `<p>Please enter a SQL query.</p>`;
+                if (!queryInput) {
+                    resultDiv.innerHTML = `<p>Please enter a query.</p>`;
+                    return;
                 }
+
+                // Optional validation based on database type
+                if (dbType === 'mongodb') {
+                    try {
+                        JSON.parse(queryInput); // Try parsing the input as JSON
+                    } catch (error) {
+                        resultDiv.innerHTML = `<p>Invalid MongoDB query format. Please enter valid JSON.</p>`;
+                        return;
+                    }
+                }
+
+                try {
+                    const response = await fetch('/api/execute_query', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ db_type: dbType, query: queryInput })
+                    });
+
+                    const data = await response.json();
+                    console.log(data); // Debugging: Log the entire response to inspect structure
+
+                    if (response.ok && data.headers && Array.isArray(data.result)) {
+                        displayTable(data.headers, data.result); // Pass headers and result to the display function
+                    } else {
+                        resultDiv.innerHTML = `<p>Error: ${data.error || 'No data found'}</p>`;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `<p>Error executing query. Please try again.</p>`;
+                }
+            }
+
+            function displayTable(headers, data) {
+                const resultDiv = document.getElementById("query-result");
+                resultDiv.innerHTML = '';
+
+                if (data.length === 0) {
+                    resultDiv.innerHTML = "<p>No results found.</p>";
+                    return;
+                }
+
+                // Create a container for scrolling
+                const scrollContainer = document.createElement("div");
+                scrollContainer.style.overflowX = "auto";
+                scrollContainer.style.width = "100%";
+
+                const table = document.createElement("table");
+                table.style.width = "100%";
+                table.style.borderCollapse = "collapse";
+
+                // Create table header row dynamically using provided headers
+                const headerRow = document.createElement("tr");
+                headers.forEach(header => {
+                    const th = document.createElement("th");
+                    th.style.border = "1px solid #dddddd";
+                    th.style.padding = "8px";
+                    th.style.backgroundColor = "#f2f2f2";
+                    th.style.textAlign = "left";
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                table.appendChild(headerRow);
+
+                // Populate table rows based on data array
+                data.forEach(row => {
+                    const rowElement = document.createElement("tr");
+                    row.forEach(cell => {
+                        const td = document.createElement("td");
+                        td.style.border = "1px solid #dddddd";
+                        td.style.padding = "8px";
+                        td.textContent = (typeof cell === 'object' && cell !== null) ? JSON.stringify(cell) : cell; // Convert objects to strings
+                        rowElement.appendChild(td);
+                    });
+                    table.appendChild(rowElement);
+                });
+
+                scrollContainer.appendChild(table);
+                resultDiv.appendChild(scrollContainer);
             }
 
             // Function to explore databases
@@ -175,46 +241,6 @@
                 }
             }
 
-            // Function to display query results in a table format
-            function displayTable(data) {
-                const resultDiv = document.getElementById("query-result");
-                resultDiv.innerHTML = '';
-
-                if (data.length === 0) {
-                    resultDiv.innerHTML = "<p>No results found.</p>";
-                    return;
-                }
-
-                const table = document.createElement("table");
-                table.style.width = "100%";
-                table.style.borderCollapse = "collapse";
-
-                const headers = Object.keys(data[0]);
-                const headerRow = document.createElement("tr");
-                headers.forEach(header => {
-                    const th = document.createElement("th");
-                    th.style.border = "1px solid #dddddd";
-                    th.style.padding = "8px";
-                    th.style.backgroundColor = "#f2f2f2";
-                    th.textContent = header;
-                    headerRow.appendChild(th);
-                });
-                table.appendChild(headerRow);
-
-                data.forEach(row => {
-                    const rowElement = document.createElement("tr");
-                    headers.forEach(header => {
-                        const td = document.createElement("td");
-                        td.style.border = "1px solid #dddddd";
-                        td.style.padding = "8px";
-                        td.textContent = row[header];
-                        rowElement.appendChild(td);
-                    });
-                    table.appendChild(rowElement);
-                });
-
-                resultDiv.appendChild(table);
-            }
         </script>
     </div>
 </body>

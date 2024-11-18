@@ -1,0 +1,142 @@
+[
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439011" },
+    "username": "john_doe",
+    "email": "johndoe@example.com",
+    "passwordHash": "hashedPassword123",
+    "createdAt": { "$date": "2023-10-05T12:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "123 Main St",
+      "city": "New York",
+      "zipCode": "10001",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439012" },
+    "username": "jane_smith",
+    "email": "janesmith@example.com",
+    "passwordHash": "hashedPassword456",
+    "createdAt": { "$date": "2023-10-06T12:00:00Z" },
+    "roles": ["admin", "user"],
+    "address": {
+      "street": "456 Elm St",
+      "city": "Los Angeles",
+      "zipCode": "90001",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439013" },
+    "username": "david_clark",
+    "email": "davidclark@example.com",
+    "passwordHash": "hashedPassword789",
+    "createdAt": { "$date": "2023-09-25T08:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "789 Oak St",
+      "city": "Chicago",
+      "zipCode": "60601",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439014" },
+    "username": "maria_garcia",
+    "email": "mariagarcia@example.com",
+    "passwordHash": "hashedPassword987",
+    "createdAt": { "$date": "2023-09-28T10:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "987 Pine St",
+      "city": "Miami",
+      "zipCode": "33101",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439015" },
+    "username": "emma_watson",
+    "email": "emmawatson@example.com",
+    "passwordHash": "hashedPassword654",
+    "createdAt": { "$date": "2023-08-15T09:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "654 Birch St",
+      "city": "Houston",
+      "zipCode": "77001",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439016" },
+    "username": "li_chen",
+    "email": "lichen@example.com",
+    "passwordHash": "hashedPassword321",
+    "createdAt": { "$date": "2023-07-30T14:30:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "321 Maple St",
+      "city": "San Francisco",
+      "zipCode": "94101",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439017" },
+    "username": "michael_jordan",
+    "email": "michaeljordan@example.com",
+    "passwordHash": "hashedPassword111",
+    "createdAt": { "$date": "2023-05-20T11:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "111 Cedar St",
+      "city": "Atlanta",
+      "zipCode": "30301",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439018" },
+    "username": "sophia_miller",
+    "email": "sophiamiller@example.com",
+    "passwordHash": "hashedPassword222",
+    "createdAt": { "$date": "2023-06-12T15:00:00Z" },
+    "roles": ["admin", "user"],
+    "address": {
+      "street": "222 Walnut St",
+      "city": "Seattle",
+      "zipCode": "98101",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439019" },
+    "username": "noah_evans",
+    "email": "noahevans@example.com",
+    "passwordHash": "hashedPassword333",
+    "createdAt": { "$date": "2023-04-10T07:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "333 Ash St",
+      "city": "Denver",
+      "zipCode": "80201",
+      "country": "USA"
+    }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439020" },
+    "username": "oliver_jones",
+    "email": "oliverjones@example.com",
+    "passwordHash": "hashedPassword444",
+    "createdAt": { "$date": "2023-03-15T13:00:00Z" },
+    "roles": ["user"],
+    "address": {
+      "street": "444 Aspen St",
+      "city": "Phoenix",
+      "zipCode": "85001",
+      "country": "USA"
+    }
+  }
+]

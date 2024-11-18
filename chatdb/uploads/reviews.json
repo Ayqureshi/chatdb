@@ -1,0 +1,82 @@
+[
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439055" },
+    "userId": { "$oid": "605c72d4bcf86cd799439011" },
+    "productId": { "$oid": "605c72d4bcf86cd799439022" },
+    "rating": 4,
+    "review": "Great sound quality but a bit pricey.",
+    "createdAt": { "$date": "2023-10-05T14:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439056" },
+    "userId": { "$oid": "605c72d4bcf86cd799439012" },
+    "productId": { "$oid": "605c72d4bcf86cd799439023" },
+    "rating": 5,
+    "review": "Amazing phone with top features!",
+    "createdAt": { "$date": "2023-10-06T09:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439057" },
+    "userId": { "$oid": "605c72d4bcf86cd799439013" },
+    "productId": { "$oid": "605c72d4bcf86cd799439024" },
+    "rating": 4,
+    "review": "Solid smartwatch with great fitness tracking features.",
+    "createdAt": { "$date": "2023-10-05T16:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439058" },
+    "userId": { "$oid": "605c72d4bcf86cd799439014" },
+    "productId": { "$oid": "605c72d4bcf86cd799439025" },
+    "rating": 5,
+    "review": "Best laptop I have ever used. Highly recommend!",
+    "createdAt": { "$date": "2023-10-07T11:30:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439059" },
+    "userId": { "$oid": "605c72d4bcf86cd799439015" },
+    "productId": { "$oid": "605c72d4bcf86cd799439026" },
+    "rating": 3,
+    "review": "It's a decent tablet, but I expected better performance.",
+    "createdAt": { "$date": "2023-10-08T14:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd79943905a" },
+    "userId": { "$oid": "605c72d4bcf86cd799439016" },
+    "productId": { "$oid": "605c72d4bcf86cd799439027" },
+    "rating": 4,
+    "review": "Great sound, but the battery could last longer.",
+    "createdAt": { "$date": "2023-10-09T09:15:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd79943905b" },
+    "userId": { "$oid": "605c72d4bcf86cd799439017" },
+    "productId": { "$oid": "605c72d4bcf86cd799439028" },
+    "rating": 5,
+    "review": "Fantastic 4K TV! The picture quality is stunning.",
+    "createdAt": { "$date": "2023-10-10T13:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd79943905c" },
+    "userId": { "$oid": "605c72d4bcf86cd799439018" },
+    "productId": { "$oid": "605c72d4bcf86cd799439029" },
+    "rating": 2,
+    "review": "Not great. The camera quality is below expectations.",
+    "createdAt": { "$date": "2023-10-11T15:30:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd79943905d" },
+    "userId": { "$oid": "605c72d4bcf86cd799439019" },
+    "productId": { "$oid": "605c72d4bcf86cd799439030" },
+    "rating": 4,
+    "review": "Good value for a wireless charger. Works as advertised.",
+    "createdAt": { "$date": "2023-10-12T16:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd79943905e" },
+    "userId": { "$oid": "605c72d4bcf86cd799439020" },
+    "productId": { "$oid": "605c72d4bcf86cd799439031" },
+    "rating": 5,
+    "review": "Incredible gaming console! Hours of fun.",
+    "createdAt": { "$date": "2023-10-13T12:00:00Z" }
+  }
+]

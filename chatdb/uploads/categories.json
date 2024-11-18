@@ -1,0 +1,52 @@
+[
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439033" },
+    "name": "Electronics",
+    "description": "Devices, gadgets, and accessories."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439034" },
+    "name": "Mobile Phones",
+    "description": "Smartphones, tablets, and related accessories."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439035" },
+    "name": "Wearables",
+    "description": "Smartwatches, fitness trackers, and health monitors."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439036" },
+    "name": "Home Appliances",
+    "description": "Kitchen appliances, cleaning devices, and more."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439037" },
+    "name": "Clothing",
+    "description": "Apparel for men, women, and children."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439038" },
+    "name": "Footwear",
+    "description": "Shoes, sandals, and other types of footwear."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439039" },
+    "name": "Books",
+    "description": "Fiction, non-fiction, and educational materials."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439040" },
+    "name": "Toys & Games",
+    "description": "Games, puzzles, and toys for children and adults."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439041" },
+    "name": "Health & Beauty",
+    "description": "Skincare, makeup, and wellness products."
+  },
+  {
+    "_id": { "$oid": "605c72d4bcf86cd799439042" },
+    "name": "Sports & Outdoors",
+    "description": "Equipment and apparel for various sports and outdoor activities."
+  }
+]
