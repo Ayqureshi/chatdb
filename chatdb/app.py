@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 import json
 import random
 from flask_cors import CORS
+from space import natural_language_to_sql
+from state import set_last_uploaded_table, get_last_uploaded_table
 
 
 app = Flask(__name__)
@@ -26,11 +28,11 @@ def allowed_file(filename):
 # MySQL connection function
 def get_db_connection():
     conn = mysql.connector.connect(
-        host="127.0.0.1",
+        host="localhost",
         port=3306,
         user="root",
-        password="Dsci-551",
-        database="chatdb",
+        password="",
+        database="dsci551",
         auth_plugin="mysql_native_password"
     )
     return conn
@@ -48,6 +50,9 @@ def index():
     return render_template('index.html')
 
 # Route to handle file upload
+# Global variable to store the name of the last uploaded table
+last_uploaded_table = None
+
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -66,12 +71,15 @@ def upload_file():
         if filename.endswith('.csv'):
             table_name = collection_name
             process_csv_file_and_load_to_db(filepath, table_name)
+            set_last_uploaded_table(table_name)
         elif filename.endswith('.json'):
             process_json_file_and_load_to_mongo(filepath, collection_name)
+            set_last_uploaded_table(collection_name)
 
         return jsonify({'message': 'File successfully uploaded', 'filename': filename}), 200
     else:
         return jsonify({'message': 'Invalid file type'}), 400
+
 
 def create_table_from_csv(conn, df, table_name):
     cursor = conn.cursor()
@@ -239,6 +247,26 @@ def explore():
 #     ]
 #     return jsonify({'queries': queries}), 200
 
+@app.route('/api/nl_to_sql', methods=['POST'])
+def nl_to_sql():
+    data = request.json
+    if not data or 'query' not in data:
+        return jsonify({'error': 'Invalid request, query key missing'}), 400
+    
+    natural_query = data['query']
+    try:
+        # Convert natural language query to SQL
+        sql_query = natural_language_to_sql(natural_query)
+        
+        # Only print and return the query
+        print(f"Generated SQL Query: {sql_query}")
+        return jsonify({'sql_query': sql_query}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
+
 # Route to handle receiving and executing MySQL queries
 @app.route('/api/execute_query', methods=['POST'])
 def execute_query():
@@ -252,6 +280,7 @@ def execute_query():
         conn = get_db_connection()
         cursor = conn.cursor()
         try:
+            # Run the query only when this endpoint is explicitly called
             cursor.execute(user_query)
             rows = cursor.fetchall()
             conn.commit()
@@ -338,16 +367,48 @@ def execute_query():
 #     }
 # }
 
+def execute_query_helper(sql_query):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql_query)
+        rows = cursor.fetchall()
+        headers = [desc[0] for desc in cursor.description] if cursor.description else []
+        result = [list(row) for row in rows]
+        return {'headers': headers, 'result': result}
+    except Exception as e:
+        return {'error': str(e)}
+    finally:
+        conn.close()
+
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.get_json()
     if not data or 'message' not in data:
-        return jsonify({'error': 'Invalid request, message key missing'}), 400
-    
-    message = data['message'].lower()
-    response = determine_response(message)
+        return jsonify({'response': 'Error: No input provided.'}), 400
 
-    return jsonify({'response': response})
+    message = data['message']
+    try:
+        # Convert to SQL
+        sql_query = natural_language_to_sql(message)
+
+        # Check if no table is available
+        if not get_last_uploaded_table():
+            return jsonify({'response': 'Error: No table has been uploaded yet. Please upload a dataset first.'}), 400
+
+        # Execute SQL
+        response = natural_language_to_sql(sql_query)
+
+        if 'error' in response:
+            return jsonify({'response': f"SQL Execution Error: {response['error']}"})
+        
+        return jsonify({'response': response})
+    except Exception as e:
+        return jsonify({'response': f"Failed to process query: {str(e)}"}), 500
+
+
+
 
 # Determine the appropriate response based on the input message
 def determine_response(message):
