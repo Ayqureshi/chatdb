@@ -1,13 +1,12 @@
-# space.py
 from state import get_last_uploaded_table
 
-# Expanded SQL keywords dictionary
+# Enhanced SQL keywords dictionary
 sql_keywords = {
     'get': 'SELECT', 'show': 'SELECT', 'display': 'SELECT', 'find': 'SELECT', 'list': 'SELECT',
     'from': 'FROM', 'in': 'FROM',
     'where': 'WHERE', 'with': 'WHERE', 'which': 'WHERE', 'whose': 'WHERE', 'that': 'WHERE',
     'order by': 'ORDER BY', 'sort by': 'ORDER BY',
-    'group by': 'GROUP BY', 'grouped by': 'GROUP BY',
+    'group by': 'GROUP BY', 'grouped by': 'GROUP BY', 'group': 'GROUP BY',
     'having': 'HAVING',
     'limit': 'LIMIT',
     'join': 'JOIN', 'joined with': 'JOIN', 'combined with': 'JOIN',
@@ -15,14 +14,17 @@ sql_keywords = {
     'on': 'ON'
 }
 
+# Enhanced aggregation words
 aggregation_words = {
     'average': 'AVG', 'mean': 'AVG', 'avg': 'AVG',
     'sum': 'SUM', 'total': 'SUM',
-    'count': 'COUNT', 'number of': 'COUNT',
+    'count': 'COUNT', 'number of': 'COUNT', 'quantity': 'COUNT',
     'max': 'MAX', 'maximum': 'MAX', 'highest': 'MAX',
-    'min': 'MIN', 'minimum': 'MIN', 'lowest': 'MIN'
+    'min': 'MIN', 'minimum': 'MIN', 'lowest': 'MIN',
+    'distinct': 'DISTINCT', 'unique': 'DISTINCT'
 }
 
+# Enhanced comparison words
 comparison_words = {
     'is': '=', 'equals': '=', '=': '=', 'equal to': '=', 'are': '=',
     'greater than': '>', 'more than': '>', 'above': '>', 'exceeds': '>',
@@ -32,45 +34,57 @@ comparison_words = {
     'at most': '<=', 'less than or equal to': '<=', 'maximum of': '<='
 }
 
-joining_words = {'and', 'or', 'but', 'the', 'a', 'an', 'of', 'with', 'for', 'from'}
-
+# Joining words
+joining_words = {
+    'and', 'or', 'but', 'the', 'a', 'an', 'of', 'with', 'for', 'from',
+    'by', 'in', 'on', 'at', 'to', 'sales', 'products', 'stores'
+}
 def tokenize_input(input_text):
-    """Enhanced tokenizer that better handles complex SQL phrases."""
-    words = input_text.split()
+    """Enhanced tokenizer to process natural language SQL input."""
+    words = input_text.lower().split()
     tokens = []
     i = 0
     
     while i < len(words):
-        current_word = words[i].lower()
+        # Ignore "all" if it's not part of a valid SQL context
+        if words[i] == "all" and (i + 1 >= len(words) or words[i + 1] not in sql_keywords):
+            i += 1
+            continue
         
         # Try multi-word combinations (up to 4 words)
+        found_match = False
         for length in range(4, 0, -1):
             if i <= len(words) - length:
-                phrase = ' '.join(word.lower() for word in words[i:i+length])
+                phrase = ' '.join(words[i:i+length])
                 if phrase in sql_keywords or phrase in comparison_words:
                     tokens.append(phrase)
                     i += length
+                    found_match = True
                     break
-        else:
-            # Handle single words
-            if current_word not in joining_words:
-                if (current_word in sql_keywords or 
-                    current_word in aggregation_words or 
-                    current_word in comparison_words):
-                    tokens.append(current_word)
+        
+        if not found_match:
+            # Handle special cases for column names with underscores
+            if '_' in words[i]:
+                tokens.append(words[i])
+            elif words[i] not in joining_words:
+                if (words[i] in sql_keywords or 
+                    words[i] in aggregation_words or 
+                    words[i] in comparison_words):
+                    tokens.append(words[i])
                 else:
-                    tokens.append(words[i])  # Preserve original case
+                    tokens.append(words[i])
             i += 1
     
     return tokens
 
+
 def natural_language_to_sql(input_text):
-    """Enhanced SQL converter with support for complex queries."""
+    """Convert natural language to SQL query."""
     tokens = tokenize_input(input_text)
     
     # Initialize query components
     select_columns = []
-    table_name = get_last_uploaded_table()
+    table_name = get_last_uploaded_table()  # Placeholder function for table name
     where_conditions = []
     having_conditions = []
     order_by = []
@@ -93,16 +107,17 @@ def natural_language_to_sql(input_text):
         
         # Handle SQL keywords and clause transitions
         if token in sql_keywords:
-            if sql_keywords[token] in ['JOIN', 'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN']:
+            sql_keyword = sql_keywords[token]
+            if sql_keyword in ['JOIN', 'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN']:
                 current_clause = 'JOIN'
-                current_join_type = sql_keywords[token]
-            elif sql_keywords[token] == 'ON':
+                current_join_type = sql_keyword
+            elif sql_keyword == 'ON':
                 current_clause = 'ON'
-            elif sql_keywords[token] == 'HAVING':
+            elif sql_keyword == 'HAVING':
                 current_clause = 'HAVING'
                 in_having = True
             else:
-                current_clause = sql_keywords[token]
+                current_clause = sql_keyword
                 in_having = False
             i += 1
             continue
@@ -115,20 +130,28 @@ def natural_language_to_sql(input_text):
                     agg_column = tokens[i + 1]
                     col_expr = f"{agg_function}({agg_column})"
                     if in_having:
-                        current_column = col_expr
+                        having_conditions.append(col_expr)
                     else:
                         select_columns.append(col_expr)
                     i += 2
                     continue
             elif token not in sql_keywords and token != "select":
-                select_columns.append(token)
+                # Handle table.column notation
+                if '.' in token:
+                    select_columns.append(token)
+                else:
+                    select_columns.append(token)
         
         elif current_clause == 'JOIN':
-            current_join_table = token
-            joins.append({'type': current_join_type, 'table': token, 'condition': None})
+            if token not in sql_keywords:
+                current_join_table = token
+                joins.append({
+                    'type': current_join_type or 'JOIN',
+                    'table': token,
+                    'condition': None
+                })
         
         elif current_clause == 'ON':
-            # Handle join conditions
             if not current_join_condition:
                 current_join_condition = token
             elif token in comparison_words:
@@ -139,56 +162,38 @@ def natural_language_to_sql(input_text):
                     current_join_condition = None
                     continue
         
-        elif current_clause in ['WHERE', 'HAVING']:
-            conditions_list = having_conditions if in_having else where_conditions
-            
-            if token in aggregation_words:
-                # Handle aggregation in HAVING clause
-                agg_function = aggregation_words[token]
-                if i + 2 < len(tokens):
-                    agg_column = tokens[i + 1]
-                    i += 2
-                    if tokens[i] in comparison_words:
-                        comparison = comparison_words[tokens[i]]
-                        value = tokens[i + 1]
-                        conditions_list.append(
-                            f"{agg_function}({agg_column}) {comparison} {value}"
-                        )
-                        i += 2
-                        continue
-            else:
-                # Normal WHERE/HAVING condition
+        elif current_clause == 'GROUP BY':
+            if token not in sql_keywords:
+                group_by.append(token)
+        
+        elif current_clause == 'WHERE':
+            if token not in sql_keywords:
                 column = token
                 if i + 2 < len(tokens):
                     if tokens[i + 1] in comparison_words:
                         comparison = comparison_words[tokens[i + 1]]
                         value = tokens[i + 2]
-                        if value.lower() not in sql_keywords:
-                            try:
-                                float(value)
-                                conditions_list.append(f"{column} {comparison} {value}")
-                            except ValueError:
-                                conditions_list.append(f"{column} {comparison} '{value}'")
-                            i += 3
-                            continue
-        
-        elif current_clause == 'GROUP BY':
-            if token not in sql_keywords:
-                group_by.append(token)
-        
-        elif current_clause == 'ORDER BY':
-            if token not in sql_keywords:
-                order_component = token
-                if i + 1 < len(tokens) and tokens[i + 1].lower() in ['asc', 'desc']:
-                    order_component += f" {tokens[i + 1].upper()}"
-                    i += 1
-                order_by.append(order_component)
+                        try:
+                            float(value)
+                            where_conditions.append(f"{column} {comparison} {value}")
+                        except ValueError:
+                            where_conditions.append(f"{column} {comparison} '{value}'")
+                        i += 3
+                        continue
         
         i += 1
     
+    # Ensure GROUP BY columns are included in SELECT clause
+    if group_by:
+        for column in group_by:
+            if column not in select_columns:
+                select_columns.append(column)
+    
+    select_columns = [col for col in select_columns if col and col.strip()]
+    
     # Build the SQL query
     query_parts = []
-    
+
     # SELECT clause
     if select_columns:
         query_parts.append(f"SELECT {', '.join(select_columns)}")
@@ -226,4 +231,9 @@ def natural_language_to_sql(input_text):
     if limit:
         query_parts.append(f"LIMIT {limit}")
     
-    return " ".join(query_parts)
+    query_parts = [part.strip(",") for part in query_parts if part.strip(",")]
+    
+    # Join all parts into the final SQL query
+    sql_query = " ".join(query_parts).replace(",,", ",")
+    
+    return sql_query.strip()
